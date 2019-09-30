@@ -1,0 +1,101 @@
+<div class='card'>
+    <!-- <div class='card-header'>
+        <b>{{pageTitle}}</b>
+    </div> -->
+    <!-- Use timer to set spinner -->
+    <!-- <p (click)="oberserableTimer()">Start Observable timer</p> {{subscribeTimer}} -->
+    <hr>
+    <form>
+        <mat-form-field>
+            <input matInput placeholder="New Player" [(ngModel)]='newPlayer' name="newPlayer">
+        </mat-form-field>
+        <button mat-raised-button (click)='addPlayer(newPlayer)'>Add Player</button>
+    </form>
+    <!-- HIDE UNTIL I FIGURE IT OUT -->
+    <table [hidden]="true" mat-table [dataSource]="playersDataSource" class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+                      The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <!-- <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+            </ng-container> -->
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="pass">
+            <th mat-header-cell *matHeaderCellDef> Pass </th>
+            <td mat-cell *matCellDef="let element"> {{element.pass}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="wins">
+            <th mat-header-cell *matHeaderCellDef> Symbol </th>
+            <td mat-cell *matCellDef="let element"> {{element.wins}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="playersDisplayedColumns"></tr>
+        <tr (click)="getRandomGif(player); dialog.open(modal)" mat-row
+            *matRowDef="let row; columns: playersDisplayedColumns;"></tr>
+    </table>
+
+    <div class='card-body'>
+        <div class='table-responsive'>
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>
+                            <!-- <input type='text' [(ngModel)]='newPlayer' placeholder='Enter New Player Name' /> -->
+                        </th>
+                        <th>Wins</th>
+                        <th>Pass Available</th>
+                        <th>
+                            <!-- <button class='btn btn-warning' (click)='addPlayer(newPlayer)'>
+                                Add Player
+                            </button> -->
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let player of players'>
+                        <td>{{player.name}}</td>
+                        <td>{{player.wins}}</td> <!-- win be a list with gif details and get length? -->
+                        <td>{{player.pass}}</td>
+                        <td>
+                            <button mat-mini-fab color="primary"
+                                (click)='getRandomGif(player); dialog.open(modal)'>
+                                gif Off!
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #modal>
+
+    <div *ngIf='selectedGif != null'>
+        <div style="text-align: center;"><img [src]='selectedGif'></div>
+        <hr>
+        <div class='row'>
+            <div class='col-md-2' style='padding:10px;' *ngFor='let player of players'>
+                <button mat-raised-button *ngIf='player !== selectedPlayer' color="primary" (click)='addWin(player)'>
+                    {{player.name}} Wins!
+                </button>
+                <button mat-raised-button color="warn" *ngIf='player === selectedPlayer && player.pass > 0'
+                    (click)='removePass(player, selectedGif)'>
+                    {{player.name}} PASS!
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
